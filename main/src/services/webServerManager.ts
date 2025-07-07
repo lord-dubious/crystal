@@ -130,7 +130,7 @@ export class WebServerManager {
       // Do not handle API routes or requests for static files (with a dot in the last segment)
       if (
         req.path.startsWith('/api') ||
-        /\.[^\/]+$/.test(req.path)
+        /\.[^/]+$/.test(req.path)
       ) {
         return next();
       }
@@ -146,7 +146,7 @@ export class WebServerManager {
     });
 
     // Error handling middleware (must be after routes)
-    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    this.app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
       this.logger.error(`[WebServer] Error handling ${req.method} ${req.path}:`, err instanceof Error ? err : new Error(String(err)));
       res.status(500).json({
         success: false,
