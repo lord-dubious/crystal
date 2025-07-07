@@ -10,7 +10,23 @@
 const http = require('http');
 
 const API_BASE = 'http://localhost:3001';
-const API_KEY = 'your-api-key-here'; // Replace with your actual API key
+
+// Allow API key to be set via environment variable or command-line argument
+function getApiKey() {
+  // 1. Check command-line arguments
+  const argKey = process.argv.find(arg => arg.startsWith('--api-key='));
+  if (argKey) {
+    return argKey.split('=')[1];
+  }
+  // 2. Check environment variable
+  if (process.env.CRYSTAL_API_KEY) {
+    return process.env.CRYSTAL_API_KEY;
+  }
+  // 3. Fallback to placeholder (warn user)
+  console.warn('Warning: Using default API key. Set CRYSTAL_API_KEY env or use --api-key argument.');
+  return 'your-api-key-here';
+}
+const API_KEY = getApiKey();
 
 // Helper function to make HTTP requests
 function makeRequest(method, path, data = null) {

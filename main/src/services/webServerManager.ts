@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { Server } from 'http';
+import path from 'path';
 import { ConfigManager } from './configManager';
 import { Logger } from '../utils/logger';
 import { AppServices } from '../ipc/types';
@@ -59,15 +60,18 @@ export class WebServerManager {
 
     // CORS configuration
     if (this.config.cors.enabled) {
+      const hasWildcard = this.config.cors.origins.includes('*');
       const corsOptions = {
-        origin: this.config.cors.origins.includes('*') 
-          ? true 
-          : this.config.cors.origins,
-        credentials: true,
+        origin: hasWildcard ? true : this.config.cors.origins,
+        credentials: !hasWildcard, // Cannot use credentials with wildcard origin
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key']
       };
       this.app.use(cors(corsOptions));
+
+      if (hasWildcard) {
+        this.logger.warn('[WebServer] Using wildcard CORS origin - credentials disabled for security');
+      }
     }
 
     // Authentication middleware
@@ -80,27 +84,18 @@ export class WebServerManager {
       this.logger.info(`[WebServer] ${req.method} ${req.path} from ${req.ip}`);
       next();
     });
-
-    // Error handling
-    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-      this.logger.error(`[WebServer] Error handling ${req.method} ${req.path}:`, err);
-      res.status(500).json({ 
-        success: false, 
-        error: 'Internal server error',
-        message: err.message 
-      });
-    });
   }
 
   private authMiddleware(req: Request, res: Response, next: NextFunction): void {
     // Skip auth for health check
     if (req.path === '/health') {
-      return next();
+      next();
+      return;
     }
 
     const apiKey = req.headers['x-api-key'] || req.headers['authorization']?.replace('Bearer ', '');
-    
-    if (!apiKey || apiKey !== this.config.auth.apiKey) {
+
+    if (!apiKey || typeof apiKey !== 'string' || apiKey.trim() === '' || apiKey !== this.config.auth.apiKey) {
       res.status(401).json({
         success: false,
         error: 'Unauthorized',
@@ -127,18 +122,36 @@ export class WebServerManager {
     this.app.use('/api', createApiRouter(this.services, this.logger));
 
     // Serve frontend static files if available
-    this.app.use(express.static('frontend/dist'));
+    const frontendPath = path.resolve(__dirname, '../../../frontend/dist');
+    this.app.use(express.static(frontendPath));
 
-    // Fallback for SPA routing
-    this.app.get('*', (req: Request, res: Response) => {
-      res.sendFile('index.html', { root: 'frontend/dist' }, (err) => {
+    // Fallback for SPA routing, but do not mask API or static file errors
+    this.app.get('*', (req: Request, res: Response, next: NextFunction) => {
+      // Do not handle API routes or requests for static files (with a dot in the last segment)
+      if (
+        req.path.startsWith('/api') ||
+        /\.[^\/]+$/.test(req.path)
+      ) {
+        return next();
+      }
+      res.sendFile('index.html', { root: frontendPath }, (err) => {
         if (err) {
-          res.status(404).json({ 
-            success: false, 
+          res.status(404).json({
+            success: false,
             error: 'Not found',
-            message: 'Frontend not available' 
+            message: 'Frontend not available'
           });
         }
+      });
+    });
+
+    // Error handling middleware (must be after routes)
+    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      this.logger.error(`[WebServer] Error handling ${req.method} ${req.path}:`, err instanceof Error ? err : new Error(String(err)));
+      res.status(500).json({
+        success: false,
+        error: 'Internal server error',
+        message: err.message
       });
     });
   }

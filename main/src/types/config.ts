@@ -42,4 +42,17 @@ export interface UpdateConfigRequest {
   stravuApiKey?: string;
   stravuServerUrl?: string;
   theme?: 'light' | 'dark';
+  webServer?: {
+    enabled?: boolean;
+    port?: number;
+    host?: string;
+    cors?: {
+      enabled?: boolean;
+      origins?: string[];
+    };
+    auth?: {
+      enabled?: boolean;
+      apiKey?: string;
+    };
+  };
 }

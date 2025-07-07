@@ -15,7 +15,7 @@ export function createApiRouter(services: AppServices, logger: Logger): Router {
           return services.sessionManager.getAllSessions();
         case 'sessions:get':
           return services.sessionManager.getSession(args[0]);
-        case 'sessions:create':
+        case 'sessions:create': {
           // Extract session creation parameters from request body
           const createData = args[0];
           return services.sessionManager.createSession(
@@ -29,6 +29,7 @@ export function createApiRouter(services: AppServices, logger: Logger): Router {
             createData.autoCommit,
             createData.folderId
           );
+        }
         case 'sessions:delete':
           return await services.sessionManager.archiveSession(args[0]);
         case 'sessions:getOutput':
@@ -41,7 +42,7 @@ export function createApiRouter(services: AppServices, logger: Logger): Router {
         // Project handlers
         case 'projects:getAll':
           return services.databaseService.getAllProjects();
-        case 'projects:create':
+        case 'projects:create': {
           const projectData = args[0];
           return services.databaseService.createProject(
             projectData.name,
@@ -53,18 +54,20 @@ export function createApiRouter(services: AppServices, logger: Logger): Router {
             projectData.defaultPermissionMode,
             projectData.openIdeCommand
           );
+        }
         case 'projects:get':
           return services.databaseService.getProject(args[0]);
         case 'projects:update':
           return services.databaseService.updateProject(args[0], args[1]);
         case 'projects:delete':
           return services.databaseService.deleteProject(args[0]);
-        case 'projects:activate':
+        case 'projects:activate': {
           const project = services.databaseService.setActiveProject(args[0]);
           if (project) {
             services.sessionManager.setActiveProject(project);
           }
           return project;
+        }
 
         // Config handlers
         case 'config:get':
@@ -134,10 +137,10 @@ export function createApiRouter(services: AppServices, logger: Logger): Router {
   // Project Management Routes
   router.get('/projects', handleRequest('projects:getAll', () => []));
   router.post('/projects', handleRequest('projects:create', (req) => [req.body]));
-  router.get('/projects/:id', handleRequest('projects:get', (req) => [parseInt(req.params.id)]));
-  router.put('/projects/:id', handleRequest('projects:update', (req) => [parseInt(req.params.id), req.body]));
-  router.delete('/projects/:id', handleRequest('projects:delete', (req) => [parseInt(req.params.id)]));
-  router.post('/projects/:id/activate', handleRequest('projects:activate', (req) => [parseInt(req.params.id)]));
+  router.get('/projects/:id', handleRequest('projects:get', (req) => [parseInt(req.params.id, 10)]));
+  router.put('/projects/:id', handleRequest('projects:update', (req) => [parseInt(req.params.id, 10), req.body]));
+  router.delete('/projects/:id', handleRequest('projects:delete', (req) => [parseInt(req.params.id, 10)]));
+  router.post('/projects/:id/activate', handleRequest('projects:activate', (req) => [parseInt(req.params.id, 10)]));
 
   // Configuration Routes
   router.get('/config', handleRequest('config:get', () => []));

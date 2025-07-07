@@ -72,17 +72,17 @@ Create or edit your Crystal config file:
 curl http://localhost:3001/health
 
 # List sessions (with authentication)
-curl -H "X-API-Key: your-api-key" http://localhost:3001/api/sessions
+curl -H "X-API-Key: <YOUR_API_KEY>" http://localhost:3001/api/sessions
 
 # Get app version
-curl -H "X-API-Key: your-api-key" http://localhost:3001/api/app/version
+curl -H "X-API-Key: <YOUR_API_KEY>" http://localhost:3001/api/app/version
 ```
 
 ### Create a Session via API
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: your-api-key" \
+  -H "X-API-Key: <YOUR_API_KEY>" \
   -d '{
     "name": "My API Session",
     "prompt": "Help me build a simple web app",
@@ -108,7 +108,7 @@ Add the generated key to your config:
   "webServer": {
     "auth": {
       "enabled": true,
-      "apiKey": "paste-your-generated-key-here"
+      "apiKey": "<PASTE_YOUR_GENERATED_KEY_HERE>"
     }
   }
 }
@@ -120,7 +120,7 @@ Add the generated key to your config:
 curl http://localhost:3001/api/sessions
 
 # This should work
-curl -H "X-API-Key: your-generated-key" http://localhost:3001/api/sessions
+curl -H "X-API-Key: <YOUR_GENERATED_KEY>" http://localhost:3001/api/sessions
 ```
 
 ## 🌐 Common Use Cases
