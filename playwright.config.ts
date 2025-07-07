@@ -17,30 +17,80 @@ export default defineConfig({
   // Opt out of parallel tests on CI
   workers: process.env.CI ? 1 : undefined,
   // Reporter to use
-  reporter: 'list',
-  
+  reporter: [
+    ['list'],
+    ['html'],
+    ['json', { outputFile: 'test-results/results.json' }]
+  ],
+
   use: {
     // Base URL to use in actions like `await page.goto('/')`
-    baseURL: 'http://localhost:4521',
+    baseURL: process.env.CRYSTAL_WEB_URL || 'http://localhost:4521',
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',
     // Take screenshot on failure
     screenshot: 'only-on-failure',
+    // Record video on failure
+    video: 'retain-on-failure',
+    // Global timeout for actions
+    actionTimeout: 10000,
+    // Global timeout for navigation
+    navigationTimeout: 30000,
   },
 
   // Configure projects for major browsers
   projects: [
+    // Desktop Electron tests (existing)
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'electron-desktop',
+      testMatch: /.*\.spec\.ts$/,
+      testIgnore: /.*e2e.*\.spec\.ts$/,
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:4521',
+      },
+    },
+
+    // Web server E2E tests (new)
+    {
+      name: 'web-server-chrome',
+      testMatch: /.*e2e.*\.spec\.ts$/,
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: process.env.CRYSTAL_WEB_URL || 'http://localhost:3001',
+      },
+    },
+
+    {
+      name: 'web-server-firefox',
+      testMatch: /.*e2e.*\.spec\.ts$/,
+      use: {
+        ...devices['Desktop Firefox'],
+        baseURL: process.env.CRYSTAL_WEB_URL || 'http://localhost:3001',
+      },
+    },
+
+    // Mobile web server tests
+    {
+      name: 'web-server-mobile',
+      testMatch: /.*e2e.*\.spec\.ts$/,
+      use: {
+        ...devices['Pixel 5'],
+        baseURL: process.env.CRYSTAL_WEB_URL || 'http://localhost:3001',
+      },
     },
   ],
 
   // Run your local dev server before starting the tests
-  webServer: {
-    command: 'pnpm electron-dev',
-    port: 4521,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+  webServer: [
+    // Electron dev server for desktop tests
+    {
+      command: 'pnpm electron-dev',
+      port: 4521,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+    // Note: Web server tests expect Crystal to be running separately on port 3001
+    // Start Crystal with web server enabled before running e2e tests
+  ],
 });

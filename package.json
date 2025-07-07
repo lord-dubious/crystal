@@ -44,7 +44,13 @@
     "generate-notices": "node scripts/generate-notices.js",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed"
+    "test:headed": "playwright test --headed",
+    "test:web-server": "node scripts/test-web-server.js",
+    "test:web-server-auto": "node scripts/test-web-server.js --start-crystal --setup-config",
+    "test:web-server-ui": "playwright test --project=web-server-chrome tests/e2e/",
+    "test:web-server-api": "playwright test tests/e2e/web-server-api.spec.ts",
+    "test:web-server-mobile": "playwright test --project=web-server-mobile tests/e2e/",
+    "test:web-server-all": "playwright test --project=web-server-chrome --project=web-server-firefox --project=web-server-mobile tests/e2e/"
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.33",
