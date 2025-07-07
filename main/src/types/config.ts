@@ -16,6 +16,20 @@ export interface AppConfig {
   stravuServerUrl?: string;
   // Theme preference
   theme?: 'light' | 'dark';
+  // Web server configuration
+  webServer?: {
+    enabled?: boolean;
+    port?: number;
+    host?: string;
+    cors?: {
+      enabled?: boolean;
+      origins?: string[];
+    };
+    auth?: {
+      enabled?: boolean;
+      apiKey?: string;
+    };
+  };
 }
 
 export interface UpdateConfigRequest {
