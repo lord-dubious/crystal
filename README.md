@@ -173,7 +173,7 @@ pnpm build:mac
 
 ## 📖 Documentation
 
-### Core Documentation
+### Core Documentation:
 - [CLAUDE.md](CLAUDE.md) - Complete technical documentation.
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Development and contribution guidelines.
 

@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { Server } from 'http';
 import path from 'path';
+import fs from 'fs';
 import { ConfigManager } from './configManager';
 import { Logger } from '../utils/logger';
 import { AppServices } from '../ipc/types';
@@ -125,9 +126,13 @@ export class WebServerManager {
     // API routes
     this.app.use('/api', createApiRouter(this.services, this.logger));
 
-    // Serve frontend static files if available
+    // Serve frontend static files if directory exists
     const frontendPath = path.resolve(__dirname, '../../../frontend/dist');
-    this.app.use(express.static(frontendPath));
+    if (fs.existsSync(frontendPath)) {
+      this.app.use(express.static(frontendPath));
+    } else {
+      this.logger.warn(`[WebServer] Frontend directory not found at ${frontendPath}, skipping static file serving`);
+    }
 
     // Fallback for SPA routing, but do not mask API or static file errors
     this.app.get('*', (req: Request, res: Response, next: NextFunction) => {
@@ -152,10 +157,11 @@ export class WebServerManager {
     // Error handling middleware (must be after routes)
     this.app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
       this.logger.error(`[WebServer] Error handling ${req.method} ${req.path}:`, err instanceof Error ? err : new Error(String(err)));
+      const isDevelopment = process.env.NODE_ENV === 'development';
       res.status(500).json({
         success: false,
         error: 'Internal server error',
-        message: err.message
+        message: isDevelopment ? err.message : 'An error occurred processing your request'
       });
     });
   }

@@ -67,22 +67,25 @@ Create or edit your Crystal config file:
 ## 🔧 API Usage Examples
 
 ### Test the API
+
+**Note**: Set your API key first: `export CRYSTAL_API_KEY="your-actual-key"`
+
 ```bash
 # Check if server is running
 curl http://localhost:3001/health
 
 # List sessions (with authentication)
-curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
+curl -H "X-API-Key: $CRYSTAL_API_KEY" http://localhost:3001/api/sessions
 
 # Get app version
-curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/app/version
+curl -H "X-API-Key: $CRYSTAL_API_KEY" http://localhost:3001/api/app/version
 ```
 
 ### Create a Session via API
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: YOUR_API_KEY_HERE" \
+  -H "X-API-Key: $CRYSTAL_API_KEY" \
   -d '{
     "name": "My API Session",
     "prompt": "Help me build a simple web app",
@@ -96,9 +99,18 @@ curl -X POST \
 ## 🔒 Security Setup (Optional but Recommended)
 
 ### Generate Secure API Key
+
+**⚠️ Security Note**: Store this key securely and never commit it to version control.
+
 ```bash
 # Generate a random 32-character key
 openssl rand -hex 32
+```
+
+**Alternative methods:**
+```bash
+# On systems without openssl
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
 ### Update Configuration
@@ -120,7 +132,7 @@ Add the generated key to your config:
 curl http://localhost:3001/api/sessions
 
 # This should work
-curl -H "X-API-Key: YOUR_GENERATED_KEY_HERE" http://localhost:3001/api/sessions
+curl -H "X-API-Key: $CRYSTAL_API_KEY" http://localhost:3001/api/sessions
 ```
 
 ## 🌐 Common Use Cases

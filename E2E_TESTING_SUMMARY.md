@@ -101,8 +101,8 @@ npm run test:web-server-mobile
 ### **Environment Variables**
 ```bash
 export CRYSTAL_WEB_URL="http://localhost:3001"
-export CRYSTAL_API_KEY="YOUR_TEST_API_KEY_HERE"
-export ANTHROPIC_API_KEY="YOUR_ANTHROPIC_API_KEY_HERE"
+export CRYSTAL_API_KEY="test-api-key-replace-with-real-key"
+export ANTHROPIC_API_KEY="sk-ant-api-key-replace-with-real-key"
 ```
 
 ### **Crystal Configuration**
@@ -114,7 +114,7 @@ export ANTHROPIC_API_KEY="YOUR_ANTHROPIC_API_KEY_HERE"
     "host": "0.0.0.0",
     "auth": {
       "enabled": true,
-      "apiKey": "YOUR_TEST_API_KEY_HERE"
+      "apiKey": "test-api-key-replace-with-real-key"
     }
   }
 }
@@ -198,7 +198,7 @@ npx playwright test --headed --slowMo=1000
 ```
 
 ### **Screenshots and Videos**
-- Automatic screenshots on test failures
+- Automatic screenshots of test failures
 - Video recordings of failed test runs
 - Trace files for detailed debugging
 
