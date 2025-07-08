@@ -54,8 +54,11 @@ export class WebServerManager {
   }
 
   private setupMiddleware(): void {
-    // JSON parsing
-    this.app.use(express.json({ limit: '10mb' }));
+    // JSON parsing with error handling
+    this.app.use(express.json({
+      limit: '10mb',
+      type: 'application/json'
+    }));
     this.app.use(express.urlencoded({ extended: true }));
 
     // CORS configuration
@@ -65,7 +68,8 @@ export class WebServerManager {
         origin: hasWildcard ? true : this.config.cors.origins,
         credentials: !hasWildcard, // Cannot use credentials with wildcard origin
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key']
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
+        optionsSuccessStatus: 200 // Some legacy browsers choke on 204
       };
       this.app.use(cors(corsOptions));
 
@@ -74,16 +78,16 @@ export class WebServerManager {
       }
     }
 
+    // Request logging (before auth to log all requests)
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
+      this.logger.info(`[WebServer] ${req.method} ${req.path} from ${req.ip || req.connection.remoteAddress || 'unknown'}`);
+      next();
+    });
+
     // Authentication middleware
     if (this.config.auth.enabled) {
       this.app.use(this.authMiddleware.bind(this));
     }
-
-    // Request logging
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
-      this.logger.info(`[WebServer] ${req.method} ${req.path} from ${req.ip}`);
-      next();
-    });
   }
 
   private authMiddleware(req: Request, res: Response, next: NextFunction): void {

@@ -68,10 +68,10 @@ The web server exposes a complete RESTful API:
 If authentication is enabled, include the API key in requests:
 ```bash
 # Using X-API-Key header
-curl -H "X-API-Key: your-api-key" http://localhost:3001/api/sessions
+curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
 
 # Using Authorization header
-curl -H "Authorization: Bearer your-api-key" http://localhost:3001/api/sessions
+curl -H "Authorization: Bearer YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
 ```
 
 #### Available Endpoints
@@ -140,7 +140,7 @@ For production use, restrict CORS origins to specific domains:
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: your-api-key" \
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
   -d '{
     "name": "My Session",
     "prompt": "Help me build a web app",
@@ -153,7 +153,7 @@ curl -X POST \
 
 ### Getting Session Output
 ```bash
-curl -H "X-API-Key: your-api-key" \
+curl -H "X-API-Key: YOUR_API_KEY_HERE" \
   http://localhost:3001/api/sessions/session-id/output
 ```
 
@@ -212,7 +212,7 @@ For more advanced integration examples, see the `examples/` directory.
 2. If the file doesn't exist, create it with basic web server configuration:
 ```json
 {
-  "anthropicApiKey": "your-anthropic-api-key",
+  "anthropicApiKey": "YOUR_ANTHROPIC_API_KEY_HERE",
   "webServer": {
     "enabled": true,
     "port": 3001,
@@ -279,7 +279,7 @@ Restart Crystal for the authentication changes to take effect.
 curl http://localhost:3001/api/sessions
 
 # This should succeed
-curl -H "X-API-Key: your-api-key-here" http://localhost:3001/api/sessions
+curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
 ```
 
 ### Using the Web Interface

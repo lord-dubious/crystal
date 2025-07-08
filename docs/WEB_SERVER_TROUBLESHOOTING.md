@@ -141,8 +141,8 @@ telnet YOUR_IP 3001
 **Verify API Key Format:**
 ```bash
 # Correct header formats
-curl -H "X-API-Key: your-api-key" http://localhost:3001/api/sessions
-curl -H "Authorization: Bearer your-api-key" http://localhost:3001/api/sessions
+curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
+curl -H "Authorization: Bearer YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
 ```
 
 **Check Configuration:**

@@ -24,7 +24,7 @@ function getApiKey() {
   }
   // 3. Fallback to placeholder (warn user)
   console.warn('Warning: Using default API key. Set CRYSTAL_API_KEY env or use --api-key argument.');
-  return 'your-api-key-here';
+  return 'YOUR_API_KEY_HERE';
 }
 const API_KEY = getApiKey();
 

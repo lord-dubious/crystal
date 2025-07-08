@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 
 // Configuration
 const WEB_SERVER_URL = process.env.CRYSTAL_WEB_URL || 'http://localhost:3001';
-const API_KEY = process.env.CRYSTAL_API_KEY || 'test-api-key-for-e2e';
+const API_KEY = process.env.CRYSTAL_API_KEY || 'TEST_API_KEY_FOR_E2E_TESTING';
 
 test.describe('Crystal Web Interface Functionality', () => {
   let page: Page;
@@ -236,7 +236,7 @@ test.describe('Crystal Web Interface Functionality', () => {
       const firstLink = navLinks.first();
       const linkText = await firstLink.textContent();
       
-      if (linkText && linkText.trim()) {
+      if (linkText?.trim()) {
         await firstLink.click();
         await page.waitForTimeout(1000);
         

@@ -60,7 +60,7 @@ curl -X POST \
 **1. Dedicated Server Configuration:**
 ```json
 {
-  "anthropicApiKey": "team-anthropic-key",
+  "anthropicApiKey": "TEAM_ANTHROPIC_API_KEY_HERE",
   "webServer": {
     "enabled": true,
     "port": 3001,
@@ -74,7 +74,7 @@ curl -X POST \
     },
     "auth": {
       "enabled": true,
-      "apiKey": "team-shared-api-key-67890"
+      "apiKey": "TEAM_SHARED_API_KEY_HERE"
     }
   }
 }
@@ -184,7 +184,7 @@ javascript:(function(){
     "host": "127.0.0.1",
     "auth": {
       "enabled": true,
-      "apiKey": "ci-cd-automation-key-xyz789"
+      "apiKey": "CI_CD_AUTOMATION_API_KEY_HERE"
     }
   }
 }
@@ -192,7 +192,7 @@ javascript:(function(){
 
 **2. Environment Variables:**
 ```bash
-export CRYSTAL_API_KEY="ci-cd-automation-key-xyz789"
+export CRYSTAL_API_KEY="CI_CD_AUTOMATION_API_KEY_HERE"
 export CRYSTAL_URL="http://localhost:3001"
 ```
 

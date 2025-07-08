@@ -2,10 +2,10 @@ import { test, expect, request } from '@playwright/test';
 
 // Configuration
 const WEB_SERVER_URL = process.env.CRYSTAL_WEB_URL || 'http://localhost:3001';
-const API_KEY = process.env.CRYSTAL_API_KEY || 'test-api-key-for-e2e';
+const API_KEY = process.env.CRYSTAL_API_KEY || 'TEST_API_KEY_FOR_E2E_TESTING';
 
 test.describe('Crystal Web Server API Validation', () => {
-  let apiContext: any;
+  let apiContext: import('@playwright/test').APIRequestContext;
 
   test.beforeAll(async ({ playwright }) => {
     // Create API request context
@@ -128,8 +128,8 @@ test.describe('Crystal Web Server API Validation', () => {
   });
 
   test('should handle CORS headers correctly', async () => {
-    const response = await apiContext.options('/api/sessions');
-    
+    const response = await apiContext.fetch('/api/sessions', { method: 'OPTIONS' });
+
     // Should handle OPTIONS request for CORS
     expect([200, 204]).toContain(response.status());
     
@@ -182,7 +182,7 @@ test.describe('Crystal Web Server API Validation', () => {
     if (response.status() === 404) {
       // Should return JSON error response
       const contentType = response.headers()['content-type'];
-      if (contentType && contentType.includes('application/json')) {
+      if (contentType?.includes('application/json')) {
         const data = await response.json();
         expect(data).toHaveProperty('success', false);
       }

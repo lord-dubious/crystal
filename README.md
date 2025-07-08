@@ -97,7 +97,7 @@ Crystal can run as a web server, allowing you to access it remotely from any dev
     "host": "0.0.0.0",
     "auth": {
       "enabled": true,
-      "apiKey": "<YOUR_SECURE_API_KEY>"
+      "apiKey": "YOUR_SECURE_API_KEY_HERE"
     }
   }
 }
@@ -118,15 +118,15 @@ Crystal can run as a web server, allowing you to access it remotely from any dev
 
 ```bash
 # Get all sessions
-curl -H "X-API-Key: <YOUR_API_KEY>" http://localhost:3001/api/sessions
+curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
 
 # Create a new session
-curl -X POST -H "Content-Type: application/json" -H "X-API-Key: <YOUR_API_KEY>" \
+curl -X POST -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY_HERE" \
   -d '{"name": "My Session", "prompt": "Help me build a web app"}' \
   http://localhost:3001/api/sessions
 
 # Continue a conversation
-curl -X POST -H "Content-Type: application/json" -H "X-API-Key: <YOUR_API_KEY>" \
+curl -X POST -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY_HERE" \
   -d '{"message": "Add error handling"}' \
   http://localhost:3001/api/sessions/session-id/continue
 ```
@@ -174,8 +174,8 @@ pnpm build:mac
 ## 📖 Documentation
 
 ### Core Documentation
-- [CLAUDE.md](CLAUDE.md) - Complete technical documentation
-- [CONTRIBUTING.md](CONTRIBUTING.md) - Development and contribution guidelines
+- [CLAUDE.md](CLAUDE.md) - Complete technical documentation.
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Development and contribution guidelines.
 
 ### Web Server Documentation
 - **🚀 [Quick Start Guide](docs/QUICK_START_WEB_SERVER.md)** - Get Crystal web server running in 5 minutes

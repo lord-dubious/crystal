@@ -14,7 +14,7 @@ const fs = require('fs');
 
 // Configuration
 const WEB_SERVER_URL = process.env.CRYSTAL_WEB_URL || 'http://localhost:3001';
-const API_KEY = process.env.CRYSTAL_API_KEY || 'test-api-key-for-e2e';
+const API_KEY = process.env.CRYSTAL_API_KEY || 'TEST_API_KEY_FOR_E2E_TESTING';
 const CRYSTAL_CONFIG_PATH = process.env.CRYSTAL_CONFIG_PATH || path.join(require('os').homedir(), '.crystal', 'config.json');
 
 // Command line arguments
@@ -105,7 +105,7 @@ function setupTestConfig() {
   }
   
   const testConfig = {
-    anthropicApiKey: process.env.ANTHROPIC_API_KEY || 'test-key',
+    anthropicApiKey: process.env.ANTHROPIC_API_KEY || 'TEST_ANTHROPIC_API_KEY_HERE',
     webServer: {
       enabled: true,
       port: 3001,

@@ -13,7 +13,7 @@ Create or edit your Crystal config file:
 **Basic Configuration** (no authentication):
 ```json
 {
-  "anthropicApiKey": "your-anthropic-api-key",
+  "anthropicApiKey": "YOUR_ANTHROPIC_API_KEY_HERE",
   "webServer": {
     "enabled": true,
     "port": 3001,
@@ -25,14 +25,14 @@ Create or edit your Crystal config file:
 **Secure Configuration** (with authentication):
 ```json
 {
-  "anthropicApiKey": "your-anthropic-api-key",
+  "anthropicApiKey": "YOUR_ANTHROPIC_API_KEY_HERE",
   "webServer": {
     "enabled": true,
     "port": 3001,
     "host": "0.0.0.0",
     "auth": {
       "enabled": true,
-      "apiKey": "your-secure-api-key-here"
+      "apiKey": "YOUR_SECURE_API_KEY_HERE"
     }
   }
 }
@@ -42,7 +42,7 @@ Create or edit your Crystal config file:
 
 1. Launch Crystal desktop application
 2. Look for this message in the console:
-   ```
+   ```text
    [WebServer] Server started on http://0.0.0.0:3001
    ```
 
@@ -72,17 +72,17 @@ Create or edit your Crystal config file:
 curl http://localhost:3001/health
 
 # List sessions (with authentication)
-curl -H "X-API-Key: <YOUR_API_KEY>" http://localhost:3001/api/sessions
+curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
 
 # Get app version
-curl -H "X-API-Key: <YOUR_API_KEY>" http://localhost:3001/api/app/version
+curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/app/version
 ```
 
 ### Create a Session via API
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: <YOUR_API_KEY>" \
+  -H "X-API-Key: YOUR_API_KEY_HERE" \
   -d '{
     "name": "My API Session",
     "prompt": "Help me build a simple web app",
@@ -108,7 +108,7 @@ Add the generated key to your config:
   "webServer": {
     "auth": {
       "enabled": true,
-      "apiKey": "<PASTE_YOUR_GENERATED_KEY_HERE>"
+      "apiKey": "PASTE_YOUR_GENERATED_KEY_HERE"
     }
   }
 }
@@ -120,7 +120,7 @@ Add the generated key to your config:
 curl http://localhost:3001/api/sessions
 
 # This should work
-curl -H "X-API-Key: <YOUR_GENERATED_KEY>" http://localhost:3001/api/sessions
+curl -H "X-API-Key: YOUR_GENERATED_KEY_HERE" http://localhost:3001/api/sessions
 ```
 
 ## 🌐 Common Use Cases

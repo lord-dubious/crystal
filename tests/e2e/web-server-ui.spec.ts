@@ -2,7 +2,7 @@ import { test, expect, Page, BrowserContext } from '@playwright/test';
 
 // Configuration for the tests
 const WEB_SERVER_URL = process.env.CRYSTAL_WEB_URL || 'http://localhost:3001';
-const API_KEY = process.env.CRYSTAL_API_KEY || 'test-api-key-for-e2e';
+const API_KEY = process.env.CRYSTAL_API_KEY || 'TEST_API_KEY_FOR_E2E_TESTING';
 
 // Test configuration
 test.describe.configure({ mode: 'serial' });
