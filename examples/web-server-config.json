@@ -1,0 +1,19 @@
+{
+  "anthropicApiKey": "YOUR_ANTHROPIC_API_KEY_HERE",
+  "webServer": {
+    "enabled": true,
+    "port": 3001,
+    "host": "0.0.0.0",
+    "cors": {
+      "enabled": true,
+      "origins": ["*"]
+    },
+    "auth": {
+      "enabled": true,
+      "apiKey": "GENERATE_SECURE_KEY_WITH_OPENSSL_RAND_HEX_32"
+    }
+  },
+  "defaultPermissionMode": "ignore",
+  "autoCheckUpdates": true,
+  "theme": "dark"
+}

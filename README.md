@@ -47,6 +47,10 @@ Crystal is an Electron desktop application that lets you run, inspect, and test 
 - **📊 Change Tracking** - View diffs and track modifications
 - **🔔 Notifications** - Desktop alerts when sessions need input
 - **🏗️ Run Scripts** - Test changes instantly without leaving Crystal
+- **🌐 Web Server Mode** - Access Crystal remotely via web browser
+- **🔒 Secure Remote Access** - API key authentication and CORS configuration
+- **📱 Cross-Platform Access** - Use Crystal from any device with a web browser
+- **🔌 RESTful API** - Complete API access to all Crystal functionality
 
 ## 🚀 Quick Start
 
@@ -78,7 +82,62 @@ When everything looks good:
 - **Squash and rebase to main**: Combine all commits and rebase onto main
 - Always preview commands with tooltips before executing
 
+## 🌐 Web Server Mode
 
+Crystal can run as a web server, allowing you to access it remotely from any device with a web browser while maintaining all desktop functionality.
+
+### Quick Setup
+
+1. **Enable Web Server** - Add to your Crystal config (`~/.crystal/config.json`):
+```json
+{
+  "webServer": {
+    "enabled": true,
+    "port": 3001,
+    "host": "0.0.0.0",
+    "auth": {
+      "enabled": true,
+      "apiKey": "YOUR_SECURE_API_KEY_HERE"
+    }
+  }
+}
+```
+
+2. **Start Crystal** - Run Crystal normally, the web server starts automatically
+3. **Access Remotely** - Open `http://YOUR_SERVER_IP:3001` in any web browser
+
+### Web Server Features
+
+- **🖥️ Full Desktop UI** - Complete Crystal interface in your browser
+- **🔌 RESTful API** - Programmatic access to all Crystal functionality
+- **🔐 Secure Authentication** - Optional API key protection
+- **🌍 CORS Support** - Configurable cross-origin resource sharing
+- **📱 Mobile Friendly** - Works on tablets and mobile devices
+
+### API Examples
+
+```bash
+# Get all sessions
+curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
+
+# Create a new session
+curl -X POST -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY_HERE" \
+  -d '{"name": "My Session", "prompt": "Help me build a web app"}' \
+  http://localhost:3001/api/sessions
+
+# Continue a conversation
+curl -X POST -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY_HERE" \
+  -d '{"message": "Add error handling"}' \
+  http://localhost:3001/api/sessions/session-id/continue
+```
+
+### 📚 Web Server Documentation
+
+- **🚀 [Quick Start Guide](docs/QUICK_START_WEB_SERVER.md)** - Get up and running in 5 minutes
+- **📖 [Complete Setup Guide](docs/WEB_SERVER_SETUP.md)** - Comprehensive configuration and API reference
+- **🔧 [Troubleshooting Guide](docs/WEB_SERVER_TROUBLESHOOTING.md)** - Solutions for common issues
+- **💡 [Usage Scenarios](examples/usage-scenarios.md)** - Real-world examples and workflows
+- **🧪 [Test Script](examples/test-web-server.js)** - Automated testing for your setup
 
 ## Installation
 
@@ -111,6 +170,19 @@ pnpm build:mac
 ```
 
 
+
+## 📖 Documentation
+
+### Core Documentation
+- [CLAUDE.md](CLAUDE.md) - Complete technical documentation.
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Development and contribution guidelines.
+
+### Web Server Documentation
+- **🚀 [Quick Start Guide](docs/QUICK_START_WEB_SERVER.md)** - Get Crystal web server running in 5 minutes
+- **📖 [Complete Setup Guide](docs/WEB_SERVER_SETUP.md)** - Comprehensive configuration, API reference, and security
+- **🔧 [Troubleshooting Guide](docs/WEB_SERVER_TROUBLESHOOTING.md)** - Solutions for common web server issues
+- **💡 [Usage Scenarios](examples/usage-scenarios.md)** - Real-world examples and team workflows
+- **🧪 [Test Script](examples/test-web-server.js)** - Automated testing for your web server setup
 
 ## 🤝 Contributing
 

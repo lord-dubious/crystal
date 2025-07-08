@@ -20,6 +20,7 @@ import { setupAutoUpdater } from './autoUpdater';
 import { setupEventListeners } from './events';
 import { AppServices } from './ipc/types';
 import { ClaudeCodeManager } from './services/claudeCodeManager';
+import { WebServerManager } from './services/webServerManager';
 
 let mainWindow: BrowserWindow | null = null;
 let taskQueue: TaskQueue | null = null;
@@ -39,6 +40,7 @@ let permissionIpcServer: PermissionIpcServer | null;
 let versionChecker: VersionChecker;
 let stravuAuthManager: StravuAuthManager;
 let stravuNotebookService: StravuNotebookService;
+let webServerManager: WebServerManager;
 
 // Store original console methods before overriding
 // These must be captured immediately when the module loads
@@ -379,6 +381,9 @@ async function initializeServices() {
     getMainWindow: () => mainWindow,
   };
 
+  // Initialize web server manager
+  webServerManager = new WebServerManager(configManager, logger, services);
+
   // Set up IPC event listeners for real-time updates
   setupEventListeners(services, () => mainWindow);
   registerIpcHandlers(services);
@@ -393,7 +398,14 @@ app.whenReady().then(async () => {
   console.log('[Main] Services initialized, creating window...');
   await createWindow();
   console.log('[Main] Window created successfully');
-  
+
+  // Start web server if enabled
+  try {
+    await webServerManager.start();
+  } catch (error) {
+    console.error('[Main] Failed to start web server:', error);
+  }
+
   // Configure auto-updater
   setupAutoUpdater(() => mainWindow);
   
@@ -454,6 +466,13 @@ app.on('before-quit', async () => {
   // Stop version checker
   if (versionChecker) {
     versionChecker.stopPeriodicCheck();
+  }
+
+  // Stop web server
+  if (webServerManager) {
+    console.log('[Main] Stopping web server...');
+    await webServerManager.stop();
+    console.log('[Main] Web server stopped');
   }
 
   // Close logger to ensure all logs are flushed
