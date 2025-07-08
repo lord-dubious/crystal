@@ -217,17 +217,55 @@ test.describe('Crystal Web Server API Validation', () => {
     // Test that API maintains proper session/state management
     const response1 = await apiContext.get('/api/sessions');
     const response2 = await apiContext.get('/api/sessions');
-    
+
     expect(response1.status()).toBe(200);
     expect(response2.status()).toBe(200);
-    
+
     const data1 = await response1.json();
     const data2 = await response2.json();
-    
+
     // Should return consistent data structure
     expect(data1).toHaveProperty('success');
     expect(data2).toHaveProperty('success');
     expect(Array.isArray(data1.data)).toBeTruthy();
     expect(Array.isArray(data2.data)).toBeTruthy();
+  });
+
+  test('should have acceptable response times', async () => {
+    // Test API performance
+    const endpoints = [
+      '/health',
+      '/api/app/version',
+      '/api/sessions',
+      '/api/projects'
+    ];
+
+    for (const endpoint of endpoints) {
+      const startTime = Date.now();
+      const response = await apiContext.get(endpoint);
+      const responseTime = Date.now() - startTime;
+
+      expect(response.status()).toBeLessThan(500);
+      expect(responseTime).toBeLessThan(5000); // 5 seconds max
+
+      if (responseTime > 1000) {
+        console.warn(`Slow response for ${endpoint}: ${responseTime}ms`);
+      }
+    }
+  });
+
+  test('should include appropriate security headers', async () => {
+    // Test for basic security headers
+    const response = await apiContext.get('/api/app/version');
+    const headers = response.headers();
+
+    // Check for CORS headers if CORS is enabled
+    if (headers['access-control-allow-origin']) {
+      expect(headers).toHaveProperty('access-control-allow-origin');
+      expect(headers).toHaveProperty('access-control-allow-methods');
+    }
+
+    // Response should be JSON
+    expect(headers['content-type']).toContain('application/json');
   });
 });

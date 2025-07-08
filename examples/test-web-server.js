@@ -50,15 +50,21 @@ function makeRequest(method, path, data = null) {
       res.on('end', () => {
         try {
           const parsed = JSON.parse(body);
-          resolve({ status: res.statusCode, data: parsed });
+          resolve({ status: res.statusCode, data: parsed, headers: res.headers });
         } catch (e) {
-          resolve({ status: res.statusCode, data: body });
+          resolve({ status: res.statusCode, data: body, headers: res.headers });
         }
       });
     });
 
     req.on('error', (err) => {
-      reject(err);
+      reject(new Error(`Request failed: ${err.message}`));
+    });
+
+    // Add timeout for robustness
+    req.setTimeout(10000, () => {
+      req.destroy();
+      reject(new Error('Request timeout after 10 seconds'));
     });
 
     if (data) {
@@ -131,15 +137,47 @@ async function testConfig() {
 async function testProjects() {
   console.log('🔍 Testing projects endpoint...');
   try {
-    const response = await makeRequest('GET', '/api/projects');
-    if (response.status === 200 && response.data.success) {
+    // 1. List projects (GET)
+    const listResponse = await makeRequest('GET', '/api/projects');
+    if (listResponse.status === 200 && listResponse.data.success) {
       console.log('✅ Projects endpoint working');
-      console.log(`   Found ${response.data.data.length} projects`);
-      return true;
+      console.log(`   Found ${listResponse.data.data.length} projects`);
     } else {
-      console.log('❌ Projects endpoint failed:', response);
+      console.log('❌ Projects GET failed:', listResponse);
       return false;
     }
+
+    // 2. Test project creation if endpoint exists
+    try {
+      const newProject = {
+        name: 'Test Project',
+        description: 'Created by automated test',
+      };
+      const createResponse = await makeRequest('POST', '/api/projects', newProject);
+      if (createResponse.status === 201 && createResponse.data.success) {
+        console.log('✅ Project creation working');
+        const createdProject = createResponse.data.data;
+
+        // 3. Test project update if creation worked
+        const updatedFields = { name: 'Updated Test Project' };
+        const updateResponse = await makeRequest('PUT', `/api/projects/${createdProject.id}`, updatedFields);
+        if (updateResponse.status === 200 && updateResponse.data.success) {
+          console.log('✅ Project update working');
+        }
+
+        // 4. Clean up - delete test project
+        const deleteResponse = await makeRequest('DELETE', `/api/projects/${createdProject.id}`);
+        if (deleteResponse.status === 200 && deleteResponse.data.success) {
+          console.log('✅ Project deletion working');
+        }
+      } else {
+        console.log('ℹ️  Project creation not available or failed (this may be expected)');
+      }
+    } catch (error) {
+      console.log('ℹ️  Project CRUD operations not available (this may be expected)');
+    }
+
+    return true;
   } catch (error) {
     console.log('❌ Projects error:', error.message);
     return false;
@@ -148,16 +186,48 @@ async function testProjects() {
 
 async function testSessions() {
   console.log('🔍 Testing sessions endpoint...');
+  let createdSessionId = null;
   try {
-    const response = await makeRequest('GET', '/api/sessions');
-    if (response.status === 200 && response.data.success) {
+    // 1. Test GET /api/sessions
+    const getResponse = await makeRequest('GET', '/api/sessions');
+    if (getResponse.status === 200 && getResponse.data.success) {
       console.log('✅ Sessions endpoint working');
-      console.log(`   Found ${response.data.data.length} sessions`);
-      return true;
+      console.log(`   Found ${getResponse.data.data.length} sessions`);
     } else {
-      console.log('❌ Sessions endpoint failed:', response);
+      console.log('❌ Sessions endpoint failed:', getResponse);
       return false;
     }
+
+    // 2. Test session creation if endpoint exists
+    try {
+      const createResponse = await makeRequest('POST', '/api/sessions', {
+        name: 'Test Session',
+        prompt: 'Test prompt for automated testing'
+      });
+      if (createResponse.status === 201 && createResponse.data.success) {
+        createdSessionId = createResponse.data.data.id;
+        console.log('✅ Session creation working');
+        console.log(`   Created session with id: ${createdSessionId}`);
+
+        // 3. Test session retrieval
+        const getSessionResponse = await makeRequest('GET', `/api/sessions/${createdSessionId}`);
+        if (getSessionResponse.status === 200 && getSessionResponse.data.success) {
+          console.log('✅ Session retrieval working');
+        }
+
+        // 4. Clean up - delete test session
+        const deleteResponse = await makeRequest('DELETE', `/api/sessions/${createdSessionId}`);
+        if (deleteResponse.status === 200 && deleteResponse.data.success) {
+          console.log('✅ Session deletion working');
+        }
+      } else {
+        console.log('ℹ️  Session creation not available or failed (this may be expected)');
+      }
+    } catch (error) {
+      console.log('ℹ️  Session CRUD operations not available (this may be expected)');
+    }
+
+    return true;
   } catch (error) {
     console.log('❌ Sessions error:', error.message);
     return false;

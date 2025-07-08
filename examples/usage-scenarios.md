@@ -2,6 +2,8 @@
 
 Real-world examples of how to use Crystal's web server functionality.
 
+> **⚠️ Security Note**: All API keys shown in examples are placeholders. Replace with your own secure API keys generated using `openssl rand -hex 32` or similar secure methods.
+
 ## 🏠 Scenario 1: Remote Work Setup
 
 **Situation**: You have a powerful desktop at home and want to access Crystal from your laptop at the office.
@@ -26,7 +28,7 @@ Real-world examples of how to use Crystal's web server functionality.
 
 **2. Router Configuration:**
 - Forward port 3001 to your desktop's local IP
-- Or set up VPN for secure access
+- Or set up a VPN for secure access
 
 **3. Access from Office:**
 - VPN: `http://192.168.1.100:3001` (home network IP)
