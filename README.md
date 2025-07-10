@@ -97,7 +97,7 @@ Crystal can run as a web server, allowing you to access it remotely from any dev
     "host": "0.0.0.0",
     "auth": {
       "enabled": true,
-      "apiKey": "YOUR_SECURE_API_KEY_HERE"
+      "apiKey": "generate-with-openssl-rand-hex-32"
     }
   }
 }
@@ -117,16 +117,19 @@ Crystal can run as a web server, allowing you to access it remotely from any dev
 ### API Examples
 
 ```bash
+# Set your API key first
+export CRYSTAL_API_KEY="your-actual-api-key"
+
 # Get all sessions
-curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
+curl -H "X-API-Key: $CRYSTAL_API_KEY" http://localhost:3001/api/sessions
 
 # Create a new session
-curl -X POST -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY_HERE" \
+curl -X POST -H "Content-Type: application/json" -H "X-API-Key: $CRYSTAL_API_KEY" \
   -d '{"name": "My Session", "prompt": "Help me build a web app"}' \
   http://localhost:3001/api/sessions
 
 # Continue a conversation
-curl -X POST -H "Content-Type: application/json" -H "X-API-Key: YOUR_API_KEY_HERE" \
+curl -X POST -H "Content-Type: application/json" -H "X-API-Key: $CRYSTAL_API_KEY" \
   -d '{"message": "Add error handling"}' \
   http://localhost:3001/api/sessions/session-id/continue
 ```

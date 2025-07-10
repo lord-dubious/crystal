@@ -36,14 +36,17 @@ Real-world examples of how to use Crystal's web server functionality.
 
 ### Usage
 ```bash
+# Set your API key first
+export CRYSTAL_API_KEY="your-actual-api-key"
+
 # Check connection from office laptop
-curl -H "X-API-Key: secure-home-office-key-12345" \
+curl -H "X-API-Key: $CRYSTAL_API_KEY" \
   http://your-home-ip:3001/health
 
 # Create session remotely
 curl -X POST \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: secure-home-office-key-12345" \
+  -H "X-API-Key: $CRYSTAL_API_KEY" \
   -d '{
     "name": "Office Work Session",
     "prompt": "Help me fix the authentication bug",
@@ -62,7 +65,7 @@ curl -X POST \
 **1. Dedicated Server Configuration:**
 ```json
 {
-  "anthropicApiKey": "TEAM_ANTHROPIC_API_KEY_HERE",
+  "anthropicApiKey": "sk-ant-team-key-replace-with-real",
   "webServer": {
     "enabled": true,
     "port": 3001,
@@ -76,7 +79,7 @@ curl -X POST \
     },
     "auth": {
       "enabled": true,
-      "apiKey": "TEAM_SHARED_API_KEY_HERE"
+      "apiKey": "team-shared-key-replace-with-real"
     }
   }
 }
@@ -91,9 +94,12 @@ curl -X POST \
 
 **Developer A - Creates Feature Session:**
 ```bash
+# Set team API key
+export CRYSTAL_API_KEY="team-shared-key-replace-with-real"
+
 curl -X POST \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: team-shared-api-key-67890" \
+  -H "X-API-Key: $CRYSTAL_API_KEY" \
   -d '{
     "name": "User Authentication Feature",
     "prompt": "Implement OAuth2 authentication with Google",
@@ -107,18 +113,18 @@ curl -X POST \
 **Developer B - Monitors Progress:**
 ```bash
 # Check all active sessions
-curl -H "X-API-Key: team-shared-api-key-67890" \
+curl -H "X-API-Key: $CRYSTAL_API_KEY" \
   http://192.168.10.50:3001/api/sessions
 
 # Get specific session details
-curl -H "X-API-Key: team-shared-api-key-67890" \
+curl -H "X-API-Key: $CRYSTAL_API_KEY" \
   http://192.168.10.50:3001/api/sessions/session-id
 ```
 
 **Team Lead - Reviews Changes:**
 ```bash
 # Get git diff for session
-curl -H "X-API-Key: team-shared-api-key-67890" \
+curl -H "X-API-Key: $CRYSTAL_API_KEY" \
   http://192.168.10.50:3001/api/git/session-id/diff
 ```
 
@@ -186,7 +192,7 @@ javascript:(function(){
     "host": "127.0.0.1",
     "auth": {
       "enabled": true,
-      "apiKey": "CI_CD_AUTOMATION_API_KEY_HERE"
+      "apiKey": "ci-automation-key-replace-with-real"
     }
   }
 }
@@ -194,7 +200,7 @@ javascript:(function(){
 
 **2. Environment Variables:**
 ```bash
-export CRYSTAL_API_KEY="CI_CD_AUTOMATION_API_KEY_HERE"
+export CRYSTAL_API_KEY="ci-automation-key-replace-with-real"
 export CRYSTAL_URL="http://localhost:3001"
 ```
 
@@ -479,7 +485,7 @@ echo "Access at: http://dev-server:3001/#/sessions/$SESSION_ID"
 # team-status.sh
 
 echo "=== Active Crystal Sessions ==="
-curl -s -H "X-API-Key: dev-team-shared-key" \
+curl -s -H "X-API-Key: $CRYSTAL_API_KEY" \
   http://dev-server:3001/api/sessions | \
   jq -r '.data[] | "\(.name) - \(.status) - \(.createdAt)"'
 
