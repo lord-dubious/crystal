@@ -43,6 +43,11 @@ Create or edit your Crystal config file:
 > - Crystal will automatically use these if available
 > - This prevents accidental commits of sensitive keys to version control
 
+> **💡 Security Tip**: Instead of storing API keys directly in config files, consider using environment variables:
+> - Set `ANTHROPIC_API_KEY` and `CRYSTAL_WEB_API_KEY` environment variables
+> - Crystal will automatically use these if available
+> - This prevents accidental commits of sensitive keys to version control
+
 ### Step 2: Start Crystal (1 minute)
 
 1. Launch Crystal desktop application

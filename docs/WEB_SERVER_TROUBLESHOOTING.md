@@ -14,7 +14,7 @@ curl -I http://localhost:3001/health
 netstat -an | grep 3001
 
 # Test API access
-curl -H "X-API-Key: your-key" http://localhost:3001/api/app/version
+curl -H "X-API-Key: $CRYSTAL_API_KEY" http://localhost:3001/api/app/version
 ```
 
 ## 🚫 Common Issues
@@ -71,9 +71,9 @@ lsof -i :3001
 **Check URL:**
 - Use `http://localhost:3001` (not https)
 - Verify port number matches configuration
-- Try `http://127.0.0.1:3001` as alternative
+- Try `http://127.0.0.1:3001` as an alternative
 
-**Check Firewall:**
+**Check the Firewall:**
 ```bash
 # macOS - check if port is blocked
 sudo pfctl -sr | grep 3001
@@ -140,9 +140,12 @@ telnet YOUR_IP 3001
 
 **Verify API Key Format:**
 ```bash
+# Set your API key first
+export CRYSTAL_API_KEY="your-actual-api-key"
+
 # Correct header formats
-curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
-curl -H "Authorization: Bearer YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
+curl -H "X-API-Key: $CRYSTAL_API_KEY" http://localhost:3001/api/sessions
+curl -H "Authorization: Bearer $CRYSTAL_API_KEY" http://localhost:3001/api/sessions
 ```
 
 **Check Configuration:**
@@ -289,13 +292,13 @@ curl -H "X-API-Key: key" http://localhost:3001/api/app/version
 - Enable JavaScript
 
 **Network Connection:**
-- Ensure mobile device is on same WiFi network
+- Ensure mobile device is on the same WiFi network
 - Check mobile data restrictions
 - Test with different devices
 
 **Interface Scaling:**
 - Use browser zoom controls
-- Rotate device for better view
+- Rotate device for a better view
 - Use landscape mode for complex operations
 
 ## 🔧 Advanced Troubleshooting
@@ -387,7 +390,7 @@ cat ~/.crystal/config.json
 
 ### Test Script Output
 
-Run the test script and include output:
+Run the test script and include the output:
 ```bash
 cd crystal
 node examples/test-web-server.js
@@ -416,9 +419,9 @@ tail -50 ~/.crystal/logs/crystal.log
 - [ ] Firewall allows local connections
 
 ### ✅ Can't Access from Network
-- [ ] `host` is set to `"0.0.0.0"`
+- [ ] `host` is set to `"0.0.0.0"` in the configuration
 - [ ] Computer's IP address is correct
-- [ ] Devices are on same network
+- [ ] Devices are on the same network
 - [ ] Firewall allows incoming connections on port 3001
 
 ### ✅ Authentication Problems

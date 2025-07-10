@@ -67,11 +67,14 @@ The web server exposes a complete RESTful API:
 #### Authentication
 If authentication is enabled, include the API key in requests:
 ```bash
+# Set your API key first
+export CRYSTAL_API_KEY="your-actual-api-key"
+
 # Using X-API-Key header
-curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
+curl -H "X-API-Key: $CRYSTAL_API_KEY" http://localhost:3001/api/sessions
 
 # Using Authorization header
-curl -H "Authorization: Bearer YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
+curl -H "Authorization: Bearer $CRYSTAL_API_KEY" http://localhost:3001/api/sessions
 ```
 
 #### Available Endpoints
@@ -100,7 +103,7 @@ curl -H "Authorization: Bearer YOUR_API_KEY_HERE" http://localhost:3001/api/sess
 **Application Info**
 - `GET /api/app/version` - Get app version
 - `GET /api/app/platform` - Get platform info
-- `GET /api/app/packaged` - Check if app is packaged
+- `GET /api/app/packaged` - Check if the app is packaged
 
 **Health Check**
 - `GET /health` - Server health status
@@ -140,7 +143,7 @@ For production use, restrict CORS origins to specific domains:
 ```bash
 curl -X POST \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: YOUR_API_KEY_HERE" \
+  -H "X-API-Key: $CRYSTAL_API_KEY" \
   -d '{
     "name": "My Session",
     "prompt": "Help me build a web app",
@@ -153,7 +156,7 @@ curl -X POST \
 
 ### Getting Session Output
 ```bash
-curl -H "X-API-Key: YOUR_API_KEY_HERE" \
+curl -H "X-API-Key: $CRYSTAL_API_KEY" \
   http://localhost:3001/api/sessions/session-id/output
 ```
 
@@ -264,14 +267,14 @@ openssl rand -hex 32
     },
     "auth": {
       "enabled": true,
-      "apiKey": "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
+      "apiKey": "generate-secure-key-with-openssl-rand-hex-32"
     }
   }
 }
 ```
 
 #### Step 3: Restart Crystal
-Restart Crystal for the authentication changes to take effect.
+Restart the application for the authentication changes to take effect.
 
 #### Step 4: Test Authentication
 ```bash
@@ -279,12 +282,12 @@ Restart Crystal for the authentication changes to take effect.
 curl http://localhost:3001/api/sessions
 
 # This should succeed
-curl -H "X-API-Key: YOUR_API_KEY_HERE" http://localhost:3001/api/sessions
+curl -H "X-API-Key: $CRYSTAL_API_KEY" http://localhost:3001/api/sessions
 ```
 
 ### Using the Web Interface
 
-#### Accessing Crystal in Browser
+#### Accessing Crystal in the Browser
 1. Open your web browser
 2. Navigate to `http://localhost:3001` (or your server's IP)
 3. You'll see the complete Crystal interface
